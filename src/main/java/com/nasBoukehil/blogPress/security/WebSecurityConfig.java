@@ -15,7 +15,7 @@ import com.nasBoukehil.blogPress.constants.BlogpressConstants;
 
 @Configuration
 @EnableWebSecurity
-@ComponentScan("com.nasBoukehil.blogpress.security")
+@ComponentScan("com.nasBoukehil.blogPress.security")
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
 	@Override
@@ -27,7 +27,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-			.antMatchers("/", "/api/listBlogs", "/viewBlogs", "addComment", "/search").permitAll()
+			.antMatchers("/", "/home","/api/listBlogs", "/viewBlogs", "addComment", "/search").permitAll()
 			.antMatchers("/controlPage/", "/addNewBlog").hasAnyAuthority(BlogpressConstants.ROLE_USER, BlogpressConstants.ROLE_ADMIN)
 			.antMatchers("/showComments/").hasAnyAuthority(BlogpressConstants.ROLE_ADMIN)
 			.and()
