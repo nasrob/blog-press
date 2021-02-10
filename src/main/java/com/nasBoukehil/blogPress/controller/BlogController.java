@@ -2,9 +2,12 @@ package com.nasBoukehil.blogPress.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nasBoukehil.blogPress.constants.BlogpressConstants;
@@ -47,6 +50,35 @@ public class BlogController {
 	}
 
 	
+	@ModelAttribute("validUserLogin")
+	public boolean isUserLoggedIn() {
+		return SecurityContextHolder.getContext().getAuthentication() != null 
+				&& SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
+				&& !(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken);
+	}
+	
+	@ModelAttribute("hasAdminRole")
+	public boolean checkIfUserHasAdminRole() {
+		return checkIfUserHasRole(BlogpressConstants.ROLE_ADMIN);
+	}
+	
+	@ModelAttribute("hasUserRole")
+	public boolean checkIfUserHasUserRole() {
+		return checkIfUserHasRole(BlogpressConstants.ROLE_USER);
+	}
+	
+	@ModelAttribute("currentUserName")
+	public String getCurrentUserName() {
+		return SecurityContextHolder.getContext().getAuthentication().getName();
+	}
+	
+	private boolean checkIfUserHasRole(String roleName) {
+		boolean hasRole = SecurityContextHolder.getContext().getAuthentication()
+							.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals(roleName));
+							
+		return hasRole;
+	}
+
 	private void setProcessingData(Model model, String PageTitle) {
 		model.addAttribute(BlogpressConstants.PAGE_TITLE, PageTitle);
 	}
