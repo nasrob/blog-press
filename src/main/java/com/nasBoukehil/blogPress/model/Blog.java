@@ -1,5 +1,6 @@
 package com.nasBoukehil.blogPress.model;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -9,6 +10,8 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.nasBoukehil.blogPress.util.BlogpressCommentComparator;
+import com.nasBoukehil.blogPress.util.BlogpressUtil;
 
 @Document(indexName = "blog", shards = 1, replicas = 0, createIndex = true)
 public class Blog {
@@ -87,6 +90,9 @@ public class Blog {
 	}
 
 	public List<Comment> getComments() {
+		if (comments != null && !comments.isEmpty()) {
+			Collections.sort(comments, new BlogpressCommentComparator());
+		}
 		return comments;
 	}
 
@@ -94,6 +100,22 @@ public class Blog {
 		this.comments = comments;
 	}
 
+	public String getPublishDateForDisplay() {
+		String returnDateStr = "";
+		if (this.getPublishDate() != null) {
+			returnDateStr = BlogpressUtil.getFormattedDateForDisplayOnPage(publishDate);
+		}
+		return returnDateStr;
+	}
+	
+	public int getCommentSize() {
+		if (this.comments != null) {
+			return this.comments.size();
+		} else {
+			return 0;
+		}
+	}
+	
 	@Override
 	public String toString() {
 		return "Blog {" + 
@@ -101,8 +123,8 @@ public class Blog {
 						", body=" + body + 
 						", status=" + status + 
 						", createdBy=" + createdBy + 
-						", createdDate=" + createdDate + 
-						", publishDate=" + publishDate + 
+						", createdDate=" + BlogpressUtil.getFormattedDateForElasticSearch(createdDate) + 
+						", publishDate=" + BlogpressUtil.getFormattedDateForElasticSearch(publishDate) + 
 						", comments=" + comments +
 				"}";
 	}

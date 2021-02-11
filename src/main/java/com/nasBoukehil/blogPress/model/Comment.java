@@ -3,6 +3,7 @@ package com.nasBoukehil.blogPress.model;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.nasBoukehil.blogPress.util.BlogpressUtil;
 
 public class Comment {
 	
@@ -116,10 +117,17 @@ public class Comment {
 					", user=" + user + 
 					", emailAddress=" + emailAddress + 
 					", commentText=" + commentText + 
-					", createdDate=" + createdDate + 
+					", createdDate=" + BlogpressUtil.getFormattedDateForElasticSearch(createdDate) + 
 				"}";
 	}
 	
+	public String getCreatedDateForDisplay() {
+		String returnDateStr = "";
+		if (this.getCreatedDate() != null) {
+			returnDateStr = BlogpressUtil.getFormattedDateForDisplayOnPage(createdDate);
+		}
+		return returnDateStr;
+	}
 	
 
 }

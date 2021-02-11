@@ -53,6 +53,10 @@ public class BlogpressUtil {
 		return getFormattedDate(inputDate, getDateFormatObj(elasticDateFormat));
 	}
 	
+	public static String getFormattedDateForDisplayOnPage(Date inputDate) {
+		return getFormattedDate(inputDate, getDateFormatObj(displayDateFormat));
+	}
+	
 	/**
 	 * 	
 	 * @param currentDate
