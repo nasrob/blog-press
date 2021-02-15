@@ -17,4 +17,5 @@ public class BlogService {
 	public void addUpdateBlog(Blog blog) {
 		blogRepository.save(blog);
 	}
+	
 }
