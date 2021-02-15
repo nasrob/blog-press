@@ -1,21 +1,30 @@
 package com.nasBoukehil.blogPress.controller;
 
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nasBoukehil.blogPress.constants.BlogpressConstants;
+import com.nasBoukehil.blogPress.model.Blog;
+import com.nasBoukehil.blogPress.service.BlogService;
 
 @Controller
 public class BlogController {
 
 	private Logger logger = LoggerFactory.getLogger(BlogController.class);
+	
+	@Autowired
+	private BlogService blogService;
 	
 	@GetMapping("/")
 	public String showLandingPage(Model model) {
@@ -49,6 +58,31 @@ public class BlogController {
 		return "login";
 	}
 
+	@GetMapping("/showAddNew")
+	public String showAddNew(Model model) {
+		logger.info("This is addNew Page URL  ");
+		setProcessingData(model, BlogpressConstants.TITLE_NEW_BLOG_PAGE);
+		return "add-new";
+	}
+	
+	@PostMapping("/addNewBlog")
+	public String addNewBlog(@RequestParam(value = "title", required = true) String title,
+							@RequestParam(value = "body", required = true) String body,
+							Model model) {
+		
+		logger.info("Adding new blog with title :" + title);
+		Blog blog = new Blog();
+		blog.setTitle(title);
+		blog.setBody(body);
+		blog.setCreatedBy(getCurrentUserName());
+		blog.setCreatedDate(new Date());
+		blog.setPublishDate(new Date());
+		blog.setStatus("Published");
+		
+		blogService.addUpdateBlog(blog);
+		
+		return "home";
+	}
 	
 	@ModelAttribute("validUserLogin")
 	public boolean isUserLoggedIn() {

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.nasBoukehil.blogPress.model.Blog;
 import com.nasBoukehil.blogPress.repository.BlogRepository;
 
 public class BlogService {
@@ -12,4 +13,8 @@ public class BlogService {
 	
 	@Autowired
 	private BlogRepository blogRepository;
+	
+	public void addUpdateBlog(Blog blog) {
+		blogRepository.save(blog);
+	}
 }
